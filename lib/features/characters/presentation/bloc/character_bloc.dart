@@ -1,8 +1,8 @@
-import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:casino_test/features/characters/domain/entities/character.dart';
 import 'package:casino_test/features/characters/domain/usecases/get_characters_use_case.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 part 'character_event.dart';
@@ -34,31 +34,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   ) async {
     if (state.hasReachedMax) return;
 
-    emit(state.copyWith(status: CharacterStatus.loading));
-
-    if (state.status == CharacterStatus.initial) {
-      final result = await _getCharactersUseCase(Params(pageNo: currentPageNo));
-
-      result.fold(
-        (failure) => emit(
-          state.copyWith(
-            status: CharacterStatus.error,
-            errorMessage: 'An error occurred',
-          ),
-        ),
-        (paginatedCharacter) {
-          emit(
-            state.copyWith(
-              status: CharacterStatus.success,
-              characters: paginatedCharacter.results,
-              hasReachedMax: false,
-            ),
-          );
-          currentPageNo++;
-        },
-      );
-    }
-
     final result = await _getCharactersUseCase(Params(pageNo: currentPageNo));
 
     result.fold(
@@ -66,16 +41,29 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
         status: CharacterStatus.error,
         errorMessage: 'An error occurred',
       )),
-      (paginatedCharacter) => emit(
-        paginatedCharacter.info.next == null
-            ? state.copyWith(hasReachedMax: true)
-            : state.copyWith(
-                status: CharacterStatus.success,
-                characters: List.of(state.characters)
-                  ..addAll(paginatedCharacter.results),
-                hasReachedMax: false,
-              ),
-      ),
+      (paginatedCharacter) {
+        currentPageNo++;
+        if (state.status == CharacterStatus.initial) {
+          emit(
+            state.copyWith(
+              status: CharacterStatus.success,
+              characters: paginatedCharacter.results,
+              hasReachedMax: false,
+            ),
+          );
+        } else {
+          emit(
+            paginatedCharacter.info.next == null
+                ? state.copyWith(hasReachedMax: true)
+                : state.copyWith(
+                    status: CharacterStatus.success,
+                    characters: List.of(state.characters)
+                      ..addAll(paginatedCharacter.results),
+                    hasReachedMax: false,
+                  ),
+          );
+        }
+      },
     );
   }
 }
