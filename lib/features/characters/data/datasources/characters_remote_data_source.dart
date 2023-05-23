@@ -6,7 +6,7 @@ import 'package:casino_test/features/characters/data/models/character_model.dart
 import 'package:http/http.dart' as http;
 
 abstract class CharactersRemoteDataSource {
-  Future<CharacterModel> getCharacters();
+  Future<PaginatedCharacterModel> getCharacters(int pageNo);
 }
 
 class CharactersRemoteDataSourceImpl implements CharactersRemoteDataSource {
@@ -15,14 +15,14 @@ class CharactersRemoteDataSourceImpl implements CharactersRemoteDataSource {
   CharactersRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<CharacterModel> getCharacters() async {
+  Future<PaginatedCharacterModel> getCharacters(int pageNo) async {
     final response = await client.get(
-      Uri.parse(Endpoint.characters),
+      Uri.parse(Endpoint.characters(pageNo)),
       headers: {'Content-Type': 'application/json'},
     );
 
     if (response.statusCode == 200) {
-      return CharacterModel.fromJson(jsonDecode(response.body));
+      return PaginatedCharacterModel.fromJson(jsonDecode(response.body));
     } else {
       throw ServerException();
     }

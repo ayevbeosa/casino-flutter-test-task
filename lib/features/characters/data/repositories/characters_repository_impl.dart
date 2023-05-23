@@ -1,3 +1,4 @@
+import 'package:casino_test/core/converters/character_converter.dart';
 import 'package:casino_test/core/error/failure.dart';
 import 'package:casino_test/core/error/server_exception.dart';
 import 'package:casino_test/core/typedefs/typedefs.dart';
@@ -8,14 +9,18 @@ import 'package:fpdart/fpdart.dart';
 
 class CharactersRepositoryImpl implements CharactersRepository {
   final CharactersRemoteDataSource remoteDataSource;
+  final CharacterConverter characterConverter;
 
-  CharactersRepositoryImpl({required this.remoteDataSource});
+  CharactersRepositoryImpl({
+    required this.remoteDataSource,
+    required this.characterConverter,
+  });
 
   @override
-  FutureEither<Character> getCharacters() async {
+  FutureEither<PaginatedCharacter> getCharacters(int pageNo) async {
     try {
-      final remoteCharacters = await remoteDataSource.getCharacters();
-      return Right(remoteCharacters);
+      final remoteData = await remoteDataSource.getCharacters(pageNo);
+      return Right(characterConverter.toPaginatedCharacter(remoteData));
     } on ServerException catch (_) {
       return Left(ServerFailure());
     }

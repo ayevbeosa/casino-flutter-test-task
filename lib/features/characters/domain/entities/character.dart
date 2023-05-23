@@ -4,7 +4,7 @@ class PaginatedCharacter extends Equatable {
   final PaginationInfo info;
   final List<Character> results;
 
-  PaginatedCharacter({
+  const PaginatedCharacter({
     required this.info,
     required this.results,
   });
@@ -19,7 +19,7 @@ class PaginationInfo extends Equatable {
   final String? next;
   final String? prev;
 
-  PaginationInfo({
+  const PaginationInfo({
     required this.count,
     required this.pages,
     required this.next,
@@ -35,7 +35,7 @@ class Character extends Equatable {
   final String name;
   final String image;
 
-  Character({
+  const Character({
     required this.id,
     required this.name,
     required this.image,

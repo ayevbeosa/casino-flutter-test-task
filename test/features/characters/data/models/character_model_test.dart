@@ -1,23 +1,25 @@
 import 'dart:convert';
 
 import 'package:casino_test/features/characters/data/models/character_model.dart';
-import 'package:casino_test/features/characters/domain/entities/character.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
-  final characterModel = CharacterModel(
+  const characterModel = CharacterModel(
     id: 361,
     name: 'Toxic Rick',
     image: 'https://rickandmortyapi.com/api/character/avatar/361.jpeg',
   );
 
-  test(
-    'should be a subclass of Character entity',
-    () async {
-      expect(characterModel, isA<Character>());
-    },
+  const paginatedCharacterModel = PaginatedCharacterModel(
+    info: PaginationInfoModel(
+      count: 826,
+      pages: 42,
+      next: 'https://rickandmortyapi.com/api/character/?page=20',
+      prev: 'https://rickandmortyapi.com/api/character/?page=18',
+    ),
+    results: [characterModel],
   );
 
   group('fromJson', () {
@@ -28,8 +30,8 @@ void main() {
           fixture('character.json'),
         );
 
-        final result = CharacterModel.fromJson(jsonMap);
-        expect(result, characterModel);
+        final result = PaginatedCharacterModel.fromJson(jsonMap);
+        expect(result, paginatedCharacterModel);
       },
     );
   });
@@ -38,12 +40,23 @@ void main() {
     test(
       'should return a JSON map containing the proper data',
       () async {
-        final result = characterModel.toJson();
+        final result = paginatedCharacterModel.toJson();
 
         final expectedJsonMap = {
-          'id': 361,
-          'name': 'Toxic Rick',
-          'image': 'https://rickandmortyapi.com/api/character/avatar/361.jpeg',
+          'info': {
+            'count': 826,
+            'pages': 42,
+            'next': 'https://rickandmortyapi.com/api/character/?page=20',
+            'prev': 'https://rickandmortyapi.com/api/character/?page=18'
+          },
+          'results': [
+            {
+              'id': 361,
+              'name': 'Toxic Rick',
+              'image':
+                  'https://rickandmortyapi.com/api/character/avatar/361.jpeg',
+            },
+          ]
         };
         expect(result, expectedJsonMap);
       },

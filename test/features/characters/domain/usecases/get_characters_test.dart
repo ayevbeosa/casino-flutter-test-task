@@ -1,4 +1,3 @@
-import 'package:casino_test/core/usecases/use_case.dart';
 import 'package:casino_test/features/characters/domain/entities/character.dart';
 import 'package:casino_test/features/characters/domain/repositories/characters_repository.dart';
 import 'package:casino_test/features/characters/domain/usecases/get_characters_use_case.dart';
@@ -17,18 +16,24 @@ void main() {
     usecase = GetCharactersUseCase(mockCharacterRepository);
   });
 
-  final character = Character(id: 1, name: 'Rick', image: 'img-url');
+  const character = Character(id: 1, name: 'Rick', image: 'img-url');
+  const paginatedCharacter = PaginatedCharacter(
+    info: PaginationInfo(count: 23, pages: 2, prev: null, next: ''),
+    results: [character],
+  );
+
+  int pageNo = 1;
 
   test(
     'should get characters from the repository',
     () async {
-      when(() => mockCharacterRepository.getCharacters())
-          .thenAnswer((_) async => Right(character));
+      when(() => mockCharacterRepository.getCharacters(pageNo))
+          .thenAnswer((_) async => const Right(paginatedCharacter));
 
-      final result = await usecase(NoParams());
+      final result = await usecase(Params(pageNo: pageNo));
 
-      expect(result, Right(character));
-      verify(() => mockCharacterRepository.getCharacters());
+      expect(result, const Right(paginatedCharacter));
+      verify(() => mockCharacterRepository.getCharacters(pageNo));
       verifyNoMoreInteractions(mockCharacterRepository);
     },
   );

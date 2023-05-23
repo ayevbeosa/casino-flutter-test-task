@@ -1,6 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:casino_test/core/error/failure.dart';
-import 'package:casino_test/core/usecases/use_case.dart';
 import 'package:casino_test/features/characters/domain/entities/character.dart';
 import 'package:casino_test/features/characters/domain/usecases/get_characters_use_case.dart';
 import 'package:casino_test/features/characters/presentation/bloc/character_bloc.dart';
@@ -10,7 +9,7 @@ import 'package:mocktail/mocktail.dart';
 
 class MockGetCharactersUseCase extends Mock implements GetCharactersUseCase {}
 
-class FakeNoParams extends Fake implements NoParams {}
+class FakeParams extends Fake implements Params {}
 
 void main() {
   late CharacterBloc bloc;
@@ -19,18 +18,22 @@ void main() {
   setUp(() {
     mockGetCharactersUseCase = MockGetCharactersUseCase();
     bloc = CharacterBloc(mockGetCharactersUseCase);
-    registerFallbackValue(FakeNoParams());
+    registerFallbackValue(FakeParams());
   });
 
-  final character = Character(
+  const character = Character(
     id: 361,
     name: 'Toxic Rick',
     image: 'https://rickandmortyapi.com/api/character/avatar/361.jpeg',
   );
+  const paginatedCharacter = PaginatedCharacter(
+    info: PaginationInfo(count: 23, pages: 2, prev: null, next: ''),
+    results: [character],
+  );
 
   test('initialState should be [Initial]', () {
     // assert
-    expect(bloc.state, equals(Initial()));
+    expect(bloc.state.status, equals(CharacterStatus.initial));
   });
 
   group('checks bloc states', () {
@@ -38,10 +41,10 @@ void main() {
       'emits loading',
       build: () => bloc,
       act: (bloc) {
-        bloc.emit(Loading());
+        bloc.emit(const CharacterState(status: CharacterStatus.loading));
       },
       expect: () => <CharacterState>[
-        Loading(),
+        const CharacterState(status: CharacterStatus.loading),
       ],
     );
 
@@ -49,10 +52,16 @@ void main() {
       'emits success state',
       build: () => bloc,
       act: (bloc) {
-        bloc.emit(Success(character));
+        bloc.emit(CharacterState(
+          status: CharacterStatus.success,
+          characters: paginatedCharacter.results,
+        ));
       },
       expect: () => <CharacterState>[
-        Success(character),
+        CharacterState(
+          status: CharacterStatus.success,
+          characters: paginatedCharacter.results,
+        ),
       ],
     );
 
@@ -60,10 +69,16 @@ void main() {
       'emits error state',
       build: () => bloc,
       act: (bloc) {
-        bloc.emit(Error('An error occurred'));
+        bloc.emit(const CharacterState(
+          status: CharacterStatus.error,
+          errorMessage: 'An error occurred',
+        ));
       },
       expect: () => <CharacterState>[
-        Error('An error occurred'),
+        const CharacterState(
+          status: CharacterStatus.error,
+          errorMessage: 'An error occurred',
+        ),
       ],
     );
   });
@@ -76,11 +91,16 @@ void main() {
           .thenAnswer((_) async => Left(ServerFailure()));
     },
     act: (bloc) {
-      bloc.add(GetCharacters());
+      bloc.add(const GetCharacters());
     },
     expect: () => <CharacterState>[
-      Loading(),
-      Error('An error occurred'),
+      const CharacterState(
+        status: CharacterStatus.loading,
+      ),
+      const CharacterState(
+        status: CharacterStatus.error,
+        errorMessage: 'An error occurred',
+      ),
     ],
   );
 
@@ -89,14 +109,19 @@ void main() {
     build: () => bloc,
     setUp: () {
       when(() => mockGetCharactersUseCase(any()))
-          .thenAnswer((_) async => Right(character));
+          .thenAnswer((_) async => const Right(paginatedCharacter));
     },
     act: (bloc) {
-      bloc.add(GetCharacters());
+      bloc.add(const GetCharacters());
     },
     expect: () => <CharacterState>[
-      Loading(),
-      Success(character),
+      const CharacterState(
+        status: CharacterStatus.loading,
+      ),
+      CharacterState(
+        status: CharacterStatus.success,
+        characters: paginatedCharacter.results,
+      ),
     ],
   );
 }

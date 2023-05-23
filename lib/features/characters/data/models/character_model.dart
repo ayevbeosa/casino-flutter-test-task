@@ -1,48 +1,43 @@
-import 'package:casino_test/features/characters/domain/entities/character.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'character_model.freezed.dart';
 part 'character_model.g.dart';
 
-@JsonSerializable()
-class PaginatedCharacterModel extends PaginatedCharacter {
-  @override
-  final PaginationInfoModel info;
-
-  @override
-  final List<CharacterModel> results;
-
-  PaginatedCharacterModel({
-    required this.info,
-    required this.results,
-  }) : super(info: info, results: results);
+@freezed
+class PaginatedCharacterModel with _$PaginatedCharacterModel {
+  @JsonSerializable(explicitToJson: true)
+  const factory PaginatedCharacterModel({
+    required PaginationInfoModel info,
+    required List<CharacterModel> results,
+  }) = _PaginatedCharacterModel;
 
   factory PaginatedCharacterModel.fromJson(Map<String, dynamic> json) =>
       _$PaginatedCharacterModelFromJson(json);
 }
 
-@JsonSerializable()
-class PaginationInfoModel extends PaginationInfo {
-  PaginationInfoModel({
+@freezed
+class PaginationInfoModel with _$PaginationInfoModel {
+  @JsonSerializable(explicitToJson: true)
+  const factory PaginationInfoModel({
     required num count,
     required num pages,
     required String? next,
     required String? prev,
-  }) : super(count: count, pages: pages, next: next, prev: prev);
+  }) = _PaginationInfo;
 
   factory PaginationInfoModel.fromJson(Map<String, dynamic> json) =>
       _$PaginationInfoModelFromJson(json);
 }
 
-@JsonSerializable()
-class CharacterModel extends Character {
-  CharacterModel({
+@freezed
+class CharacterModel with _$CharacterModel {
+  @JsonSerializable(explicitToJson: true)
+  const factory CharacterModel({
     required num id,
     required String name,
     required String image,
-  }) : super(id: id, name: name, image: image);
+  }) = _CharacterModel;
 
   factory CharacterModel.fromJson(Map<String, dynamic> json) =>
       _$CharacterModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CharacterModelToJson(this);
 }

@@ -21,6 +21,8 @@ void main() {
     registerFallbackValue(FakeUri());
   });
 
+  int pageNo = 1;
+
   test(
     'should preform a GET request on a URL with application/json header',
     () {
@@ -31,11 +33,11 @@ void main() {
         (_) async => http.Response(fixture('character.json'), 200),
       );
 
-      dataSource.getCharacters();
+      dataSource.getCharacters(pageNo);
 
       verify(
         () => mockHttpClient.get(
-          Uri.parse(Endpoint.characters),
+          Uri.parse(Endpoint.characters(pageNo)),
           headers: {'Content-Type': 'application/json'},
         ),
       );
@@ -53,7 +55,7 @@ void main() {
       );
 
       final call = dataSource.getCharacters;
-      expect(() => call(), throwsA(TypeMatcher<ServerException>()));
+      expect(() => call(pageNo), throwsA(const TypeMatcher<ServerException>()));
     },
   );
 }

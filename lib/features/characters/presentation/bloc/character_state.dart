@@ -1,33 +1,34 @@
 part of 'character_bloc.dart';
 
-abstract class CharacterState extends Equatable {
-  const CharacterState();
-}
+enum CharacterStatus { initial, loading, success, error }
 
-class Initial extends CharacterState {
+class CharacterState extends Equatable {
+  final CharacterStatus status;
+  final List<Character> characters;
+  final bool hasReachedMax;
+  final String errorMessage;
+
+  const CharacterState({
+    this.status = CharacterStatus.initial,
+    this.characters = const <Character>[],
+    this.hasReachedMax = false,
+    this.errorMessage = '',
+  });
+
+  CharacterState copyWith({
+    CharacterStatus? status,
+    List<Character>? characters,
+    bool? hasReachedMax,
+    String? errorMessage,
+  }) {
+    return CharacterState(
+      status: status ?? this.status,
+      characters: characters ?? this.characters,
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      errorMessage: errorMessage ?? this.errorMessage,
+    );
+  }
+
   @override
-  List<Object> get props => [];
-}
-
-class Loading extends CharacterState {
-  @override
-  List<Object> get props => [];
-}
-
-class Success extends CharacterState {
-  final Character character;
-
-  const Success(this.character);
-
-  @override
-  List<Object> get props => [character];
-}
-
-class Error extends CharacterState {
-  final String message;
-
-  const Error(this.message);
-
-  @override
-  List<Object> get props => [message];
+  List<Object> get props => [status, characters, hasReachedMax, errorMessage];
 }
