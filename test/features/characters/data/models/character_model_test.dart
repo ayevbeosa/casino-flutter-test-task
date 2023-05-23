@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:casino_test/features/data/models/character_model.dart';
-import 'package:casino_test/features/domain/entities/character.dart';
+import 'package:casino_test/features/characters/data/models/character_model.dart';
+import 'package:casino_test/features/characters/domain/entities/character.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../fixtures/fixture_reader.dart';
+import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
   final characterModel = CharacterModel(

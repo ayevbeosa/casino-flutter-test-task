@@ -1,8 +1,8 @@
 import 'package:casino_test/core/error/failure.dart';
 import 'package:casino_test/core/error/server_exception.dart';
-import 'package:casino_test/features/data/datasources/characters_remote_data_source.dart';
-import 'package:casino_test/features/data/models/character_model.dart';
-import 'package:casino_test/features/data/repositories/characters_repository_impl.dart';
+import 'package:casino_test/features/characters/data/datasources/characters_remote_data_source.dart';
+import 'package:casino_test/features/characters/data/models/character_model.dart';
+import 'package:casino_test/features/characters/data/repositories/characters_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';

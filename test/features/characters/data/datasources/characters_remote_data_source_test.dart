@@ -1,11 +1,11 @@
 import 'package:casino_test/core/error/server_exception.dart';
 import 'package:casino_test/core/network/endpoint.dart';
-import 'package:casino_test/features/data/datasources/characters_remote_data_source.dart';
+import 'package:casino_test/features/characters/data/datasources/characters_remote_data_source.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 
-import '../../../fixtures/fixture_reader.dart';
+import '../../../../fixtures/fixture_reader.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 

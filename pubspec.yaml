@@ -28,6 +28,7 @@ dev_dependencies:
   json_serializable: ^6.0.0
   flutter_lints: ^1.0.0
   mocktail: ^0.3.0
+  bloc_test: ^9.1.2
 
 flutter:
   uses-material-design: true

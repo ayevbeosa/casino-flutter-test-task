@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:casino_test/core/error/server_exception.dart';
 import 'package:casino_test/core/network/endpoint.dart';
-import 'package:casino_test/features/data/models/character_model.dart';
+import 'package:casino_test/features/characters/data/models/character_model.dart';
 import 'package:http/http.dart' as http;
 
 abstract class CharactersRemoteDataSource {

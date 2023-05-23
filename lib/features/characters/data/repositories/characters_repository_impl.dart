@@ -1,9 +1,9 @@
 import 'package:casino_test/core/error/failure.dart';
 import 'package:casino_test/core/error/server_exception.dart';
 import 'package:casino_test/core/typedefs/typedefs.dart';
-import 'package:casino_test/features/data/datasources/characters_remote_data_source.dart';
-import 'package:casino_test/features/domain/entities/character.dart';
-import 'package:casino_test/features/domain/repositories/characters_repository.dart';
+import 'package:casino_test/features/characters/data/datasources/characters_remote_data_source.dart';
+import 'package:casino_test/features/characters/domain/entities/character.dart';
+import 'package:casino_test/features/characters/domain/repositories/characters_repository.dart';
 import 'package:fpdart/fpdart.dart';
 
 class CharactersRepositoryImpl implements CharactersRepository {

@@ -1,4 +1,4 @@
-import 'package:casino_test/features/domain/entities/character.dart';
+import 'package:casino_test/features/characters/domain/entities/character.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'character_model.g.dart';
