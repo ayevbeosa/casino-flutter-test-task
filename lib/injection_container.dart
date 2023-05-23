@@ -12,7 +12,7 @@ final getIt = GetIt.instance;
 
 void init() {
   // Data Sources
-  getIt.registerLazySingleton(
+  getIt.registerLazySingleton<CharactersRemoteDataSource>(
     () => CharactersRemoteDataSourceImpl(client: getIt()),
   );
 
