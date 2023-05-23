@@ -33,6 +33,14 @@ void main() {
     id: 361,
     name: 'Toxic Rick',
     image: 'https://rickandmortyapi.com/api/character/avatar/361.jpeg',
+    status: 'Dead',
+    species: 'Humanoid',
+    gender: 'Male',
+    location: LocationModel(
+      name: 'Earth',
+      url: 'https://rickandmortyapi.com/api/location/20',
+    ),
+    episode: ['https://rickandmortyapi.com/api/episode/27'],
   );
 
   const paginatedCharacterModel = PaginatedCharacterModel(
@@ -44,6 +52,14 @@ void main() {
     id: 361,
     name: 'Toxic Rick',
     image: 'https://rickandmortyapi.com/api/character/avatar/361.jpeg',
+    status: 'Dead',
+    species: 'Humanoid',
+    gender: 'Male',
+    location: Location(
+      name: 'Earth',
+      url: 'https://rickandmortyapi.com/api/location/20',
+    ),
+    episode: ['https://rickandmortyapi.com/api/episode/27'],
   );
 
   const paginatedCharacter = PaginatedCharacter(

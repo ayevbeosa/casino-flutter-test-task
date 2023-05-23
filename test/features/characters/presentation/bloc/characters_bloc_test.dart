@@ -25,6 +25,14 @@ void main() {
     id: 361,
     name: 'Toxic Rick',
     image: 'https://rickandmortyapi.com/api/character/avatar/361.jpeg',
+    status: 'Dead',
+    species: 'Humanoid',
+    gender: 'Male',
+    location: Location(
+      name: 'Earth',
+      url: 'https://rickandmortyapi.com/api/location/20',
+    ),
+    episode: ['https://rickandmortyapi.com/api/episode/27'],
   );
   const paginatedCharacter = PaginatedCharacter(
     info: PaginationInfo(count: 23, pages: 2, prev: null, next: ''),
@@ -37,17 +45,6 @@ void main() {
   });
 
   group('checks bloc states', () {
-    blocTest<CharacterBloc, CharacterState>(
-      'emits loading',
-      build: () => bloc,
-      act: (bloc) {
-        bloc.emit(const CharacterState(status: CharacterStatus.loading));
-      },
-      expect: () => <CharacterState>[
-        const CharacterState(status: CharacterStatus.loading),
-      ],
-    );
-
     blocTest<CharacterBloc, CharacterState>(
       'emits success state',
       build: () => bloc,
@@ -84,7 +81,8 @@ void main() {
   });
 
   blocTest<CharacterBloc, CharacterState>(
-    'should emit [Loading, Error] with a message for the error when getting data fails',
+    'should emit CharacterState with status of [CharacterStatus.error] with '
+    'a message for the error when getting data fails',
     build: () => bloc,
     setUp: () {
       when(() => mockGetCharactersUseCase(any()))
@@ -95,9 +93,6 @@ void main() {
     },
     expect: () => <CharacterState>[
       const CharacterState(
-        status: CharacterStatus.loading,
-      ),
-      const CharacterState(
         status: CharacterStatus.error,
         errorMessage: 'An error occurred',
       ),
@@ -105,8 +100,9 @@ void main() {
   );
 
   blocTest<CharacterBloc, CharacterState>(
-    'should emit [Loading, Success] for successful data fetch',
-    build: () => bloc,
+    'should emit CharacterState with status of [CharacterStatus.success] for '
+    'successful data fetch',
+    build: () => CharacterBloc(mockGetCharactersUseCase),
     setUp: () {
       when(() => mockGetCharactersUseCase(any()))
           .thenAnswer((_) async => const Right(paginatedCharacter));
@@ -115,9 +111,6 @@ void main() {
       bloc.add(const GetCharacters());
     },
     expect: () => <CharacterState>[
-      const CharacterState(
-        status: CharacterStatus.loading,
-      ),
       CharacterState(
         status: CharacterStatus.success,
         characters: paginatedCharacter.results,

@@ -36,8 +36,25 @@ class CharacterModel with _$CharacterModel {
     required num id,
     required String name,
     required String image,
+    required String gender,
+    required String species,
+    required String status,
+    required List<String> episode,
+    required LocationModel location,
   }) = _CharacterModel;
 
   factory CharacterModel.fromJson(Map<String, dynamic> json) =>
       _$CharacterModelFromJson(json);
+}
+
+@freezed
+class LocationModel with _$LocationModel {
+  @JsonSerializable(explicitToJson: true)
+  const factory LocationModel({
+    required String name,
+    required String url,
+  }) = _LocationModel;
+
+  factory LocationModel.fromJson(Map<String, dynamic> json) =>
+      _$LocationModelFromJson(json);
 }

@@ -7,6 +7,8 @@ abstract class CharacterConverter {
   );
 
   PaginationInfo toPaginationInfo(PaginationInfoModel paginationInfoModel);
+
+  Character toCharacter(CharacterModel characterModel);
 }
 
 class CharacterConverterImpl implements CharacterConverter {
@@ -16,9 +18,8 @@ class CharacterConverterImpl implements CharacterConverter {
   ) {
     return PaginatedCharacter(
       info: toPaginationInfo(paginatedCharacterModel.info),
-      results: paginatedCharacterModel.results
-          .map((e) => Character(id: e.id, name: e.name, image: e.image))
-          .toList(),
+      results:
+          paginatedCharacterModel.results.map((e) => toCharacter(e)).toList(),
     );
   }
 
@@ -29,6 +30,23 @@ class CharacterConverterImpl implements CharacterConverter {
       pages: paginationInfoModel.pages,
       next: paginationInfoModel.next,
       prev: paginationInfoModel.prev,
+    );
+  }
+
+  @override
+  Character toCharacter(CharacterModel characterModel) {
+    return Character(
+      id: characterModel.id,
+      name: characterModel.name,
+      image: characterModel.image,
+      gender: characterModel.gender,
+      species: characterModel.species,
+      status: characterModel.status,
+      episode: characterModel.episode,
+      location: Location(
+        name: characterModel.location.name,
+        url: characterModel.location.url,
+      ),
     );
   }
 }

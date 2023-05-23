@@ -43,6 +43,13 @@ _$_CharacterModel _$$_CharacterModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as num,
       name: json['name'] as String,
       image: json['image'] as String,
+      gender: json['gender'] as String,
+      species: json['species'] as String,
+      status: json['status'] as String,
+      episode:
+          (json['episode'] as List<dynamic>).map((e) => e as String).toList(),
+      location:
+          LocationModel.fromJson(json['location'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_CharacterModelToJson(_$_CharacterModel instance) =>
@@ -50,4 +57,21 @@ Map<String, dynamic> _$$_CharacterModelToJson(_$_CharacterModel instance) =>
       'id': instance.id,
       'name': instance.name,
       'image': instance.image,
+      'gender': instance.gender,
+      'species': instance.species,
+      'status': instance.status,
+      'episode': instance.episode,
+      'location': instance.location.toJson(),
+    };
+
+_$_LocationModel _$$_LocationModelFromJson(Map<String, dynamic> json) =>
+    _$_LocationModel(
+      name: json['name'] as String,
+      url: json['url'] as String,
+    );
+
+Map<String, dynamic> _$$_LocationModelToJson(_$_LocationModel instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'url': instance.url,
     };
