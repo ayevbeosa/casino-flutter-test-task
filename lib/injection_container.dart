@@ -3,6 +3,7 @@ import 'package:casino_test/features/characters/data/datasources/characters_remo
 import 'package:casino_test/features/characters/data/repositories/characters_repository_impl.dart';
 import 'package:casino_test/features/characters/domain/repositories/characters_repository.dart';
 import 'package:casino_test/features/characters/domain/usecases/get_characters_use_case.dart';
+import 'package:casino_test/features/characters/presentation/bloc/character_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
@@ -10,8 +11,13 @@ import 'package:http/retry.dart';
 final getIt = GetIt.instance;
 
 void init() {
-  // Use cases
-  getIt.registerLazySingleton(() => GetCharactersUseCase(getIt()));
+  // Data Sources
+  getIt.registerLazySingleton(
+    () => CharactersRemoteDataSourceImpl(client: getIt()),
+  );
+
+  // External
+  getIt.registerLazySingleton<http.Client>(() => RetryClient(http.Client()));
 
   // Core
   getIt.registerLazySingleton<CharacterConverter>(
@@ -26,11 +32,9 @@ void init() {
     ),
   );
 
-  // Data Sources
-  getIt.registerLazySingleton(
-    () => CharactersRemoteDataSourceImpl(client: getIt()),
-  );
+  // Use cases
+  getIt.registerLazySingleton(() => GetCharactersUseCase(getIt()));
 
-  // External
-  getIt.registerLazySingleton<http.Client>(() => RetryClient(http.Client()));
+  // Bloc
+  getIt.registerFactory(() => CharacterBloc(getIt()));
 }
