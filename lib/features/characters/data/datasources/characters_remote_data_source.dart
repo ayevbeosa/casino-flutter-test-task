@@ -20,14 +20,6 @@ class CharactersRemoteDataSourceImpl implements CharactersRemoteDataSource {
       Uri.parse(Endpoint.characters(pageNo)),
       headers: {'Content-Type': 'application/json'},
     );
-    final requestInfo =
-        'Request Method: ${response.request?.method ?? 'Unknown'}'
-        '\n'
-        'Request URL: ${response.request?.url ?? 'Unknown'}'
-        '\n'
-        'Request Headers: ${response.headers}';
-
-    print(requestInfo);
 
     if (response.statusCode == 200) {
       return PaginatedCharacterModel.fromJson(jsonDecode(response.body));
