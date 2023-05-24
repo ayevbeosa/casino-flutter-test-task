@@ -39,7 +39,7 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     result.fold(
       (failure) => emit(state.copyWith(
         status: CharacterStatus.error,
-        errorMessage: 'An error occurred',
+        errorMessage: failure.message,
       )),
       (paginatedCharacter) {
         currentPageNo++;

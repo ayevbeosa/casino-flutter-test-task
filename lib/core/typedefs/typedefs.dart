@@ -1,4 +1,4 @@
-import 'package:casino_test/core/error/failure.dart';
+import 'package:casino_test/core/error/server_exception.dart';
 import 'package:fpdart/fpdart.dart';
 
-typedef FutureEither<T> = Future<Either<Failure, T>>;
+typedef FutureEither<T> = Future<Either<ServerException, T>>;

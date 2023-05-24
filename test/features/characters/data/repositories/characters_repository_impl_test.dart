@@ -1,5 +1,4 @@
 import 'package:casino_test/core/converters/character_converter.dart';
-import 'package:casino_test/core/error/failure.dart';
 import 'package:casino_test/core/error/server_exception.dart';
 import 'package:casino_test/features/characters/data/datasources/characters_remote_data_source.dart';
 import 'package:casino_test/features/characters/data/models/character_model.dart';
@@ -91,13 +90,13 @@ void main() {
     'should return server failure when the call to remote data source is unsuccessful',
     () async {
       when(() => mockRemoteDataSource.getCharacters(pageNo))
-          .thenThrow(ServerException());
+          .thenThrow(ServerException(statusCode: 500));
 
       final result = await repository.getCharacters(pageNo);
 
       verify(() => mockRemoteDataSource.getCharacters(pageNo));
 
-      expect(result, equals(Left(ServerFailure())));
+      expect(result, equals(Left(ServerException(statusCode: 500))));
     },
   );
 }

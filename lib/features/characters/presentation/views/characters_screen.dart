@@ -30,10 +30,13 @@ class _CharactersScreenState extends State<CharactersScreen> {
           builder: (context, state) {
             switch (state.status) {
               case CharacterStatus.error:
-                return const Center(child: Text('failed to fetch posts'));
+                if (state.characters.isNotEmpty) {
+                  return _characterList(state);
+                }
+                return Center(child: Text(state.errorMessage));
               case CharacterStatus.success:
                 if (state.characters.isEmpty) {
-                  return const Center(child: Text('no posts'));
+                  return const Center(child: Text('No one is home'));
                 }
                 return PageView.builder(
                   itemBuilder: (context, index) {
@@ -84,5 +87,29 @@ class _CharactersScreenState extends State<CharactersScreen> {
     final maxScroll = _pageController.position.maxScrollExtent;
     final currentScroll = _pageController.offset;
     return currentScroll >= (maxScroll * 0.9);
+  }
+
+  Widget _characterList(CharacterState state) {
+    return PageView.builder(
+      itemBuilder: (context, index) {
+        bool active = index == _currentIndex;
+
+        return index >= state.characters.length
+            ? const Loader()
+            : CharacterListItem(
+                character: state.characters[index],
+                active: active,
+              );
+      },
+      itemCount: state.hasReachedMax
+          ? state.characters.length
+          : state.characters.length + 1,
+      controller: _pageController,
+      onPageChanged: (page) {
+        setState(() {
+          _currentIndex = page;
+        });
+      },
+    );
   }
 }

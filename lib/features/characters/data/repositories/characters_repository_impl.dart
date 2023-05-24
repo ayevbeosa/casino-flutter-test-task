@@ -1,5 +1,4 @@
 import 'package:casino_test/core/converters/character_converter.dart';
-import 'package:casino_test/core/error/failure.dart';
 import 'package:casino_test/core/error/server_exception.dart';
 import 'package:casino_test/core/typedefs/typedefs.dart';
 import 'package:casino_test/features/characters/data/datasources/characters_remote_data_source.dart';
@@ -21,8 +20,10 @@ class CharactersRepositoryImpl implements CharactersRepository {
     try {
       final remoteData = await remoteDataSource.getCharacters(pageNo);
       return Right(characterConverter.toPaginatedCharacter(remoteData));
-    } on ServerException catch (_) {
-      return Left(ServerFailure());
+    } on ServerException catch (e) {
+      return Left(e);
+    } catch (e) {
+      return Left(ServerException.handleError(e));
     }
   }
 }

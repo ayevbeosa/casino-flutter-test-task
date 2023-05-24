@@ -1,5 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:casino_test/core/error/failure.dart';
+import 'package:casino_test/core/error/server_exception.dart';
 import 'package:casino_test/features/characters/domain/entities/character.dart';
 import 'package:casino_test/features/characters/domain/usecases/get_characters_use_case.dart';
 import 'package:casino_test/features/characters/presentation/bloc/character_bloc.dart';
@@ -86,7 +86,7 @@ void main() {
     build: () => bloc,
     setUp: () {
       when(() => mockGetCharactersUseCase(any()))
-          .thenAnswer((_) async => Left(ServerFailure()));
+          .thenAnswer((_) async => Left(ServerException(statusCode: 500)));
     },
     act: (bloc) {
       bloc.add(const GetCharacters());
@@ -94,7 +94,7 @@ void main() {
     expect: () => <CharacterState>[
       const CharacterState(
         status: CharacterStatus.error,
-        errorMessage: 'An error occurred',
+        errorMessage: 'Internal server error',
       ),
     ],
   );
