@@ -82,6 +82,8 @@ void main() {
       when(() => mockRemoteDataSource.getCharacters(pageNo))
           .thenAnswer((_) async => paginatedCharacterModel);
 
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+
       final result = await repository.getCharacters(pageNo);
 
       verify(() => mockRemoteDataSource.getCharacters(pageNo));
@@ -99,11 +101,32 @@ void main() {
       when(() => mockRemoteDataSource.getCharacters(pageNo))
           .thenThrow(ServerException(statusCode: 500));
 
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+
       final result = await repository.getCharacters(pageNo);
 
       verify(() => mockRemoteDataSource.getCharacters(pageNo));
 
-      expect(result, equals(Left(ServerException(statusCode: 500))));
+      expect(
+        result,
+        equals(Left(ServerException(statusCode: 500))),
+      );
+    },
+  );
+
+  test(
+    'should return no internet connection when device is offline',
+    () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+
+      final result = await repository.getCharacters(pageNo);
+
+      verifyZeroInteractions(mockRemoteDataSource);
+
+      expect(
+          result,
+          equals(Left(ServerException(
+              message: 'No internet connection', statusCode: null))));
     },
   );
 }

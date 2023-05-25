@@ -42,4 +42,15 @@ class ServerException implements Exception {
         return 'Something went wrong';
     }
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ServerException &&
+          runtimeType == other.runtimeType &&
+          message == other.message &&
+          statusCode == other.statusCode;
+
+  @override
+  int get hashCode => message.hashCode ^ statusCode.hashCode;
 }
