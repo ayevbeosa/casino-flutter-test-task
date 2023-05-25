@@ -1,5 +1,6 @@
 import 'package:casino_test/core/converters/character_converter.dart';
 import 'package:casino_test/core/error/server_exception.dart';
+import 'package:casino_test/core/network/network_info.dart';
 import 'package:casino_test/features/characters/data/datasources/characters_remote_data_source.dart';
 import 'package:casino_test/features/characters/data/models/character_model.dart';
 import 'package:casino_test/features/characters/data/repositories/characters_repository_impl.dart';
@@ -12,17 +13,23 @@ class MockRemoteDataSource extends Mock implements CharactersRemoteDataSource {}
 
 class MockCharacterConverter extends Mock implements CharacterConverter {}
 
+class MockNetworkInfo extends Mock implements NetworkInfo {}
+
 void main() {
   late CharactersRepositoryImpl repository;
   late MockRemoteDataSource mockRemoteDataSource;
   late MockCharacterConverter mockCharacterConverter;
+  late MockNetworkInfo mockNetworkInfo;
 
   setUp(() {
     mockRemoteDataSource = MockRemoteDataSource();
     mockCharacterConverter = MockCharacterConverter();
+    mockNetworkInfo = MockNetworkInfo();
+
     repository = CharactersRepositoryImpl(
       remoteDataSource: mockRemoteDataSource,
       characterConverter: mockCharacterConverter,
+      networkInfo: mockNetworkInfo,
     );
   });
 
