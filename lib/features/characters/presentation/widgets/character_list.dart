@@ -1,6 +1,6 @@
 import 'package:casino_test/features/characters/presentation/bloc/character_bloc.dart';
+import 'package:casino_test/features/characters/presentation/widgets/bottom_loader.dart';
 import 'package:casino_test/features/characters/presentation/widgets/character_list_item.dart';
-import 'package:casino_test/features/characters/presentation/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,7 +34,7 @@ class _CharacterListState extends State<CharacterList> {
           itemBuilder: (context, index) {
             return index >= widget.state.characters.length
                 ? widget.state.errorMessage.isEmpty
-                    ? const Loader()
+                    ? const BottomLoader()
                     : const SizedBox()
                 : CharacterListItem(
                     character: widget.state.characters[index],
