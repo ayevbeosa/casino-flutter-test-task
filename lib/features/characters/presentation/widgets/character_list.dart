@@ -33,7 +33,9 @@ class _CharacterListState extends State<CharacterList> {
         ListView.builder(
           itemBuilder: (context, index) {
             return index >= widget.state.characters.length
-                ? const Loader()
+                ? widget.state.errorMessage.isEmpty
+                    ? const Loader()
+                    : const SizedBox()
                 : CharacterListItem(
                     character: widget.state.characters[index],
                   );
